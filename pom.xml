@@ -26,6 +26,7 @@
     <modules>
         <module>kodo-api</module>
         <module>kodo-worker</module>
+        <module>kodo-contracts</module>
     </modules>
 
 </project>
