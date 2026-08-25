@@ -1,4 +1,4 @@
-package com.kodo.contracts.event;
+package com.kodo.contracts.events;
 
 import java.time.Instant;
 import java.util.Map;
