@@ -1,6 +1,6 @@
 package com.kodo.api.infrastructure.kafka;
 
-import com.kodo.api.application.ports.EventPublisher;
+import com.kodo.api.application.ports.out.EventPublisher;
 import com.kodo.contracts.events.GameEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;

@@ -1,6 +1,6 @@
 package com.kodo.api.application.services;
 
-import com.kodo.api.application.ports.EventPublisher;
+import com.kodo.api.application.ports.out.EventPublisher;
 import com.kodo.api.domain.dto.requests.CreateEventRequest;
 import com.kodo.api.domain.services.EventService;
 import com.kodo.contracts.events.GameEvent;

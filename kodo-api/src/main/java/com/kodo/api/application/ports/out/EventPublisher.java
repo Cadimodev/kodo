@@ -1,4 +1,4 @@
-package com.kodo.api.application.ports;
+package com.kodo.api.application.ports.out;
 
 import com.kodo.contracts.events.GameEvent;
 
