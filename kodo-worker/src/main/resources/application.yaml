@@ -13,3 +13,19 @@ spring:
 
   kafka:
     bootstrap-servers: localhost:9092
+
+    consumer:
+      group-id: telemetry-storage
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+
+      properties:
+        "[spring.json.value.default.type]": "com.kodo.contracts.events.GameEvent"
+        "[spring.json.trusted.packages]": "com.kodo.contracts.events"
+
+kodo:
+  kafka:
+    topic: telemetry.events
