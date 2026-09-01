@@ -6,6 +6,8 @@ spring:
     url: jdbc:postgresql://localhost:5434/kodo
     username: kodo
     password: kodo
+    hikari:
+      connection-timeout: 5000
 
   jpa:
     hibernate:
