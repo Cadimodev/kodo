@@ -1,15 +1,17 @@
 package com.kodo.worker.infrastructure.kafka;
 
 import com.kodo.worker.application.exceptions.InvalidEventException;
-import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.listener.ConsumerRecordRecoverer;
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.util.backoff.BackOff;
 import org.springframework.util.backoff.FixedBackOff;
 
 @Configuration
@@ -20,20 +22,32 @@ public class KafkaErrorHandlingConfig {
             KafkaTemplate<Object, Object> kafkaTemplate,
             @Value("${kodo.kafka.dlt-topic}") String dltTopic
     ) {
-        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(
-                kafkaTemplate,
-                (record, exception) ->
-                        new TopicPartition(dltTopic, record.partition())
-        );
+        DeadLetterPublishingRecoverer recoverer =
+                new DeadLetterPublishingRecoverer(
+                        kafkaTemplate,
+                        (record, exception) ->
+                                new TopicPartition(dltTopic, record.partition())
+                );
 
         recoverer.setFailIfSendResultIsError(true);
 
-        DefaultErrorHandler errorHandler = new DefaultErrorHandler(
+        return createErrorHandler(
                 recoverer,
                 new FixedBackOff(1000L, 3L)
         );
+    }
 
-        errorHandler.addNotRetryableExceptions(InvalidEventException.class);
+    static DefaultErrorHandler createErrorHandler(
+            ConsumerRecordRecoverer recoverer,
+            BackOff backOff
+    ) {
+        DefaultErrorHandler errorHandler =
+                new DefaultErrorHandler(recoverer, backOff);
+
+        errorHandler.addNotRetryableExceptions(
+                InvalidEventException.class
+        );
+
         return errorHandler;
     }
 
