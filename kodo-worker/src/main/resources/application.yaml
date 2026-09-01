@@ -26,6 +26,11 @@ spring:
         "[spring.json.value.default.type]": "com.kodo.contracts.events.GameEvent"
         "[spring.json.trusted.packages]": "com.kodo.contracts.events"
 
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+
 kodo:
   kafka:
     topic: telemetry.events
+    dlt-topic: telemetry.events-dlt
