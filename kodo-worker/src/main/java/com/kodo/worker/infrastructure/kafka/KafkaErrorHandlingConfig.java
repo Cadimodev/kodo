@@ -1,5 +1,6 @@
 package com.kodo.worker.infrastructure.kafka;
 
+import com.kodo.worker.application.exceptions.InvalidEventException;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,10 +28,13 @@ public class KafkaErrorHandlingConfig {
 
         recoverer.setFailIfSendResultIsError(true);
 
-        return new DefaultErrorHandler(
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler(
                 recoverer,
                 new FixedBackOff(1000L, 3L)
         );
+
+        errorHandler.addNotRetryableExceptions(InvalidEventException.class);
+        return errorHandler;
     }
 
     @Bean
