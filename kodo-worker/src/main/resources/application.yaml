@@ -22,15 +22,12 @@ spring:
       enable-auto-commit: false
 
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
 
       properties:
+        "[spring.deserializer.value.delegate.class]": org.springframework.kafka.support.serializer.JacksonJsonDeserializer
         "[spring.json.value.default.type]": "com.kodo.contracts.events.GameEvent"
         "[spring.json.trusted.packages]": "com.kodo.contracts.events"
-
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
 
 kodo:
   kafka:
