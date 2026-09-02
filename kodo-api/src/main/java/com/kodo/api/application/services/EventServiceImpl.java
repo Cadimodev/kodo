@@ -1,6 +1,9 @@
 package com.kodo.api.application.services;
 
+import com.kodo.api.application.dto.RateLimitResult;
+import com.kodo.api.application.exceptions.RateLimitExceededException;
 import com.kodo.api.application.ports.out.EventPublisher;
+import com.kodo.api.application.ports.out.RateLimiter;
 import com.kodo.api.domain.dto.requests.CreateEventRequest;
 import com.kodo.api.domain.services.EventService;
 import com.kodo.contracts.events.GameEvent;
@@ -12,13 +15,23 @@ import java.util.concurrent.CompletableFuture;
 public class EventServiceImpl implements EventService {
 
     private final EventPublisher eventPublisher;
+    private final RateLimiter rateLimiter;
 
-    public EventServiceImpl(EventPublisher eventPublisher) {
+    public EventServiceImpl(EventPublisher eventPublisher, RateLimiter rateLimiter) {
         this.eventPublisher = eventPublisher;
+        this.rateLimiter = rateLimiter;
     }
 
     @Override
     public CompletableFuture<Void> createEvent(CreateEventRequest request) {
+
+        // TODO: Replace gameId with an authenticated client identity once authentication/API keys are introduced.
+        String rateLimitKey = request.gameId();;
+        RateLimitResult rateLimitResult = rateLimiter.tryConsume(rateLimitKey, 1);
+
+        if (!rateLimitResult.allowed()) {
+            throw new RateLimitExceededException(rateLimitResult.retryAfterSeconds());
+        }
 
         GameEvent event = new GameEvent(
                 request.eventId(),

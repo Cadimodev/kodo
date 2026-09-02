@@ -2,6 +2,13 @@ spring:
   application:
     name: kodo-api
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      connect-timeout: 500ms
+      timeout: 500ms
+
   datasource:
     url: jdbc:postgresql://localhost:5434/kodo
     username: kodo
@@ -21,3 +28,7 @@ spring:
 kodo:
   kafka:
     topic: telemetry.events
+  rate-limit:
+    enabled: true
+    capacity: 10
+    refill-rate: 2
