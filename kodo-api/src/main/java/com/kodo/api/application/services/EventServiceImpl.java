@@ -4,8 +4,8 @@ import com.kodo.api.application.dto.RateLimitResult;
 import com.kodo.api.application.exceptions.RateLimitExceededException;
 import com.kodo.api.application.ports.out.EventPublisher;
 import com.kodo.api.application.ports.out.RateLimiter;
-import com.kodo.api.domain.dto.requests.CreateEventRequest;
-import com.kodo.api.domain.services.EventService;
+import com.kodo.api.application.dto.requests.CreateEventRequest;
+import com.kodo.api.application.ports.in.EventService;
 import com.kodo.contracts.events.GameEvent;
 import org.springframework.stereotype.Service;
 

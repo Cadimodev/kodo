@@ -1,6 +1,6 @@
-package com.kodo.api.domain.services;
+package com.kodo.api.application.ports.in;
 
-import com.kodo.api.domain.dto.requests.CreateEventRequest;
+import com.kodo.api.application.dto.requests.CreateEventRequest;
 
 import java.util.concurrent.CompletableFuture;
 

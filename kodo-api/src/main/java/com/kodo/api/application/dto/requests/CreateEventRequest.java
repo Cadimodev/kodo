@@ -1,4 +1,4 @@
-package com.kodo.api.domain.dto.requests;
+package com.kodo.api.application.dto.requests;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
