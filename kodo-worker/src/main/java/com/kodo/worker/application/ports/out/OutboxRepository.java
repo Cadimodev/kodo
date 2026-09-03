@@ -2,7 +2,7 @@ package com.kodo.worker.application.ports.out;
 
 import com.kodo.contracts.events.GameEvent;
 
-public interface EventRepository {
+public interface OutboxRepository {
 
-    boolean saveIfAbsent(GameEvent event);
+    void savePending(GameEvent event);
 }

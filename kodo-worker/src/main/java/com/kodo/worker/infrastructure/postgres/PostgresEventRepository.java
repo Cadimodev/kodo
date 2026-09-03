@@ -23,12 +23,12 @@ public class PostgresEventRepository implements EventRepository {
     }
 
     @Override
-    public void save(GameEvent event) {
+    public boolean saveIfAbsent(GameEvent event) {
 
         Map<String, Object> payload = event.payload() != null ? event.payload() : Map.of();
         String payloadJson = objectMapper.writeValueAsString(payload);
 
-        jpaEventRepository.insertIfAbsent(
+        int insertedRows = jpaEventRepository.insertIfAbsent(
                 UUID.randomUUID(),
                 event.eventId(),
                 event.gameId(),
@@ -38,5 +38,7 @@ public class PostgresEventRepository implements EventRepository {
                 Instant.now(),
                 payloadJson
         );
+
+        return insertedRows == 1;
     }
 }
