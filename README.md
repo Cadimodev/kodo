@@ -247,6 +247,16 @@ Kodo will deliberately introduce production-style failure scenarios after the ba
 
 The goal is to solve these problems because they become observable, not to prematurely build every production mechanism into the first version.
 
+## Known Limitations and Future Improvements
+
+### Outbox publisher coordination
+
+The current outbox publisher assumes a single active publisher instance. If multiple worker instances poll the outbox concurrently, they may read and publish the same pending event.
+
+This does not affect correctness because downstream consumers are designed to be idempotent, but it can cause unnecessary duplicate work and Kafka traffic.
+
+If horizontal scaling of the outbox publisher becomes necessary, row claiming should be introduced, for example using PostgreSQL `FOR UPDATE SKIP LOCKED` or a lease-based mechanism, so different workers process different batches of pending events.
+
 ## Testing Strategy
 
 The planned test coverage includes:
