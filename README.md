@@ -271,16 +271,16 @@ The planned test coverage includes:
 
 ## Roadmap
 
-- [ ] **Phase 0 - Skeleton:** monorepo, both Spring Boot applications, Docker Compose, Kafka, PostgreSQL, and health checks.
-- [ ] **Phase 1 - Vertical slice:** `POST /events` -> Kafka -> `kodo-worker` -> PostgreSQL.
-- [ ] **Phase 2 - Contracts:** event types, validation, stable serialization, and tests.
-- [ ] **Phase 3 - Reads:** basic query endpoints backed by PostgreSQL.
+- [x] **Phase 0 - Skeleton:** monorepo, both Spring Boot applications, Docker Compose, Kafka, PostgreSQL, and health checks.
+- [x] **Phase 1 - Vertical slice:** `POST /events` -> Kafka -> `kodo-worker` -> PostgreSQL.
+- [x] **Phase 2 - Contracts:** event types, validation, stable serialization, and tests.
+- [x] **Phase 3 - Reads:** basic query endpoints backed by PostgreSQL.
 - [ ] **Phase 4 - Redis:** derived player/weapon aggregates and optimized reads.
 - [ ] **Phase 5 - Reliability:** idempotency, retries, and failed-message handling.
 - [ ] **Phase 6 - Performance:** batch ingestion, consumer batching, load testing, and metrics.
 - [ ] **Phase 7 - CI/CD:** GitHub Actions for builds, tests, and container images.
 - [ ] **Phase 8 - AWS/Terraform:** reproducible cloud deployment and teardown using Infrastructure as Code.
-- [ ] **Phase 9 - Optional extension:** a second consumer group for a justified analytics, anti-cheat, or experimental use case.
+- [ ] **Phase 9 - Optional extension:** additional independently justified consumer or projection.
 
 ## Design Principles
 
