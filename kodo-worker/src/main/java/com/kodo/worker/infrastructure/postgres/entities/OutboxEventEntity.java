@@ -47,4 +47,20 @@ public class OutboxEventEntity {
         this.createdAt = createdAt;
         this.publishedAt = null;
     }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public UUID getEventId() {
+        return eventId;
+    }
+
+    public String getGameId() {
+        return gameId;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
 }
