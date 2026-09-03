@@ -9,7 +9,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
 @Testcontainers
-@SpringBootTest
+@SpringBootTest(properties = {
+		"spring.kafka.admin.auto-create=false"
+})
 class KodoApiApplicationTests {
 
 	@Container
