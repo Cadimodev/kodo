@@ -33,3 +33,4 @@ kodo:
   kafka:
     topic: telemetry.events
     dlt-topic: telemetry.events-dlt
+    persisted-topic: telemetry.events.persisted
