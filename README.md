@@ -24,20 +24,30 @@ Implemented:
 ## Architecture
 
 ```mermaid
-flowchart TD
-    API["kodo-api"] -->|"GameEvent"| Incoming["telemetry.events"]
-    Incoming --> Consumer["Worker consumer"]
-    Consumer -->|"One transaction: event + outbox"| DB[(PostgreSQL)]
-    Consumer -->|"Failed records"| DLT["telemetry.events-dlt"]
-    Scheduler["Worker outbox scheduler"] -->|"Read pending / mark published"| DB
-    Scheduler -->|"GameEventPersisted"| Persisted["telemetry.events.persisted"]
-    API -->|"Query events"| DB
-    API -->|"Rate limiting"| Redis[(Redis)]
-    Persisted -.-> Projector["Stats Projector: planned"]
-    Projector -.->|"Derived statistics: planned"| Redis
+flowchart LR
+    Client["Game Client / Simulator"]
+    API["kodo-api"]
+    Kafka[(Kafka)]
+    Worker["kodo-worker"]
+    Postgres[(PostgreSQL)]
+    Redis[(Redis)]
+
+    Client -->|"POST /events"| API
+    Client -->|"GET /events"| API
+    API -->|"Publish events"| Kafka
+    Kafka -->|"Consume events"| Worker
+    Worker -->|"Publish persisted events"| Kafka
+    Worker -->|"Persist events + outbox"| Postgres
+    API -->|"Query events"| Postgres
+    API -->|"Rate limiting"| Redis
+    Worker -.->|"Derived stats: planned"| Redis
 ```
 
-The consumer and outbox scheduler run inside **the same `kodo-worker` application**, with separate execution paths. PostgreSQL is the durable source of truth. Redis currently holds rate-limit state; it does not yet hold telemetry aggregates.
+Solid arrows show implemented interactions; the dashed arrow shows planned statistics processing. Kafka represents the broker, with separate topics: the API publishes `GameEvent` to `telemetry.events`, and the worker publishes `GameEventPersisted` to `telemetry.events.persisted`. Failed ingestion records are routed to `telemetry.events-dlt` according to the worker's retry policy.
+
+The consumer and outbox scheduler run inside **the same `kodo-worker` application**, with separate execution paths. PostgreSQL is the durable source of truth: the event and its outbox entry are committed in one transaction. The scheduler later reads pending entries and marks them published after successful Kafka publication; the detailed failure behaviour is described in **Transactional Outbox** below.
+
+Redis currently holds ingestion rate-limit state. The planned Stats Projector will run in the worker, consume persisted-event notifications, and maintain derived Redis statistics. It and the statistics read endpoints are not implemented yet.
 
 | Module / directory | Responsibility |
 | --- | --- |
