@@ -1,6 +1,7 @@
 package com.kodo.worker.infrastructure.kafka;
 
 import com.kodo.contracts.events.GameEvent;
+import com.kodo.contracts.events.GameEventPersisted;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -30,6 +31,11 @@ public class KafkaProducerConfig {
 
         serializers.put(
                 GameEvent.class,
+                new JacksonJsonSerializer<>()
+        );
+
+        serializers.put(
+                GameEventPersisted.class,
                 new JacksonJsonSerializer<>()
         );
 

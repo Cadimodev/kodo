@@ -23,7 +23,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Testcontainers
 @SpringBootTest(properties = {
         "spring.kafka.listener.auto-startup=false",
-        "spring.kafka.admin.auto-create=false"
+        "spring.kafka.admin.auto-create=false",
+        "kodo.outbox.enabled=false"
 })
 class EventProcessingServiceIntegrationTest {
 
